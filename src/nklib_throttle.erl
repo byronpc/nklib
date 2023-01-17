@@ -132,7 +132,6 @@ get_last_counter(TimeKeys, Counters) ->
 
 get_last_counter(TimeKeys, Counters, Now) ->
     KeySlots = get_time_slots(TimeKeys, Now),
-    %lager:error("NKLOG SLOTS ~p", [KeySlots]),
     do_get_counter(KeySlots, Counters, #{}).
 
 
@@ -164,7 +163,6 @@ get_last_counters(TimeKeys, Counters) ->
 
 get_last_counters(TimeKeys, Counters, Now) ->
     KeySlots = get_time_slots(TimeKeys, Now),
-    %lager:error("NKLOG SLOTS2 ~p", [KeySlots]),
     do_get_counters(KeySlots, Counters, #{}).
 
 

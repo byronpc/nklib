@@ -23,6 +23,7 @@
 -author('Carlos Gonzalez <carlosj.gf@gmail.com>').
 
 -export([csv/1, test1/0]).
+-include("nklib.hrl").
 
 
 %% ===================================================================
@@ -66,7 +67,7 @@ csv([$\n | Rest], Line, false, Letters, Words, Records, Fields) ->
     Words2 = lists:reverse([Word|Words]),
     case catch lists:zip(Fields, Words2) of
         {'EXIT', _} ->
-            lager:error("NKLOG F1: ~p W: ~p", [Fields, Words2]),
+            ?E("NKLOG F1: ~p W: ~p", [Fields, Words2]),
             {error, {csv_parser_error, {invalid_fields, Line}}};
         Zipped ->
             Record = maps:from_list(Zipped),
@@ -80,10 +81,9 @@ csv([], _Line, false, [], [], Records, _Fields) ->
 csv([], Line, false, Letters, Words, Records, Fields) ->
     Word = list_to_binary(lists:reverse(Letters)),
     Words2 = lists:reverse([Word|Words]),
-    %lager:error("NKLOG F2 ~p W2 ~p", [Letters, Words]),
     case catch lists:zip(Fields, Words2) of
         {'EXIT', _} ->
-            lager:error("NKLOG F2: ~p W: ~p", [Fields, Words2]),
+            ?E("NKLOG F2: ~p W: ~p", [Fields, Words2]),
             {error, {csv_parser_error, {invalid_fields, Line}}};
         Zipped ->
             Record = maps:from_list(Zipped),

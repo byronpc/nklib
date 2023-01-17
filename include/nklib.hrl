@@ -18,23 +18,20 @@
 %%
 %% -------------------------------------------------------------------
 
--ifndef(NKLIB_HRL_).
--define(NKLIB_HRL_, 1).
-
 %% ===================================================================
 %% Defines
 %% ===================================================================
 
-
--define(I(T), lager:notice(T)).
--define(I(T,P), lager:notice(T,P)).
--define(N(T), lager:notice(T)).
--define(N(T,P), lager:notice(T,P)).
--define(W(T), lager:warning(T)).
--define(W(T,P), lager:warning(T,P)).
--define(E(T), lager:error(T)).
--define(E(T,P), lager:error(T,P)).
--define(PR(T), lager:pr(T, ?MODULE)).
+-define(D(T), logger:debug(T)).
+-define(D(T,P), logger:debug(T,P)).
+-define(I(T), logger:notice(T)).
+-define(I(T,P), logger:notice(T,P)).
+-define(N(T), logger:notice(T)).
+-define(N(T,P), logger:notice(T,P)).
+-define(W(T), logger:warning(T)).
+-define(W(T,P), logger:warning(T,P)).
+-define(E(T), logger:error(T)).
+-define(E(T,P), logger:error(T,P)).
 
 
 
@@ -57,7 +54,4 @@
     ext_headers = [] :: list(),
     disp = <<>> :: binary()
 }).
-
-
--endif.
 

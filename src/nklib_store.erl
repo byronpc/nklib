@@ -39,6 +39,8 @@
 
 -define(STORE_TIMER, 5000).
 
+-include("nklib.hrl").
+
 
 %% ===================================================================
 %% Public
@@ -254,7 +256,7 @@ handle_call(stop, _From, State) ->
     {stop, normal, ok, State};
 
 handle_call(Msg, _From, State) -> 
-    lager:error("Module ~p received unexpected call ~p", [?MODULE, Msg]),
+    ?E("Module ~p received unexpected call ~p", [?MODULE, Msg]),
     {noreply, State}.
 
 
@@ -267,7 +269,7 @@ handle_cast({update_timer, Time}, #state{timer=Timer}=State) ->
     handle_info({timeout, none, timer}, State#state{time=Time});
 
 handle_cast(Msg, State) -> 
-    lager:error("Module ~p received unexpected cast ~p", [?MODULE, Msg]),
+    ?E("Module ~p received unexpected cast ~p", [?MODULE, Msg]),
     {noreply, State}.
 
 
@@ -286,7 +288,7 @@ handle_info({timeout, _, timer}, #state{time=Time}=State) ->
     {noreply, State#state{timer=Timer}};
 
 handle_info(Info, State) -> 
-    lager:warning("Module ~p received unexpected info: ~p", [?MODULE, Info]),
+    ?W("Module ~p received unexpected info: ~p", [?MODULE, Info]),
     {noreply, State}.
 
 

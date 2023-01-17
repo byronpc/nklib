@@ -32,6 +32,7 @@
 -export([init/1, terminate/2, code_change/3, handle_call/3,
          handle_cast/2, handle_info/2]).
 
+-include("nklib.hrl").
 
 
 %% ===================================================================
@@ -92,11 +93,11 @@ stop() ->
     {stop, term()} | ignore.
 
 init([#{dirs:=Dirs}]) ->
-    lager:info("Reloader started (~p)", [self()]),
+    ?I("Reloader started (~p)", [self()]),
     lists:foreach(
         fun(Dir) ->
             {ok, Pid} = enotify:start_link(Dir),
-            lager:info("Listener for ~s: ~p", [Dir, Pid])
+            ?I("Listener for ~s: ~p", [Dir, Pid])
         end,
         Dirs),
     {ok, #state{no_beam_reload=true}}.
@@ -108,7 +109,7 @@ init([#{dirs:=Dirs}]) ->
     {stop, Reason::term(), #state{}} | {stop, Reason::term(), Reply::term(), #state{}}.
 
 handle_call(Msg, _From, State) ->
-    lager:error("Module ~p received unexpected call ~p", [?MODULE, Msg]),
+    ?E("Module ~p received unexpected call ~p", [?MODULE, Msg]),
     {noreply, State}.
 
 
@@ -120,7 +121,7 @@ handle_cast(stop, State) ->
     {stop, normal, State};
 
 handle_cast(Msg, State) -> 
-    lager:error("Module ~p received unexpected cast ~p", [?MODULE, Msg]),
+    ?E("Module ~p received unexpected cast ~p", [?MODULE, Msg]),
     {noreply, State}.
 
 
@@ -139,13 +140,13 @@ handle_info({Str, List}, State) when is_list(Str), is_list(List) ->
         erl ->
             recompile(Str, State);
         unknown ->
-            lager:debug("Modified but not recognized ~s", [Str]),
+            ?D("Modified but not recognized ~s", [Str]),
             State
     end,
     {noreply, State2};
 
 handle_info(Info, State) -> 
-    lager:warning("Module ~p received unexpected info: ~p (~p)", [?MODULE, Info, State]),
+    ?W("Module ~p received unexpected info: ~p (~p)", [?MODULE, Info, State]),
     {noreply, State}.
 
 
@@ -196,7 +197,7 @@ get_type(Str) ->
 
 % %% @private
 % reload(Module, #state{no_beam_reload=true}=State) ->
-%     lager:debug("Skipping reload for ~s", [Module]),
+%     ?D("Skipping reload for ~s", [Module]),
 %     State;
 
 % reload(Module, State) ->
@@ -204,16 +205,16 @@ get_type(Str) ->
 %     code:purge(Module),
 %     case code:load_file(Module) of
 %         {module, Module} ->
-%             lager:info("Module ~s reloaded", [Module]);
+%             ?I("Module ~s reloaded", [Module]);
 %         {error, Error} ->
-%             lager:notice("Module ~s NOT reloaded: ~p", [Module, Error])
+%             ?N("Module ~s NOT reloaded: ~p", [Module, Error])
 %     end,
 %     State.
 
 
 %% @private
 recompile(Str, State) ->
-    lager:info("Recompiling because of ~p", [Str]),
+    ?I("Recompiling because of ~p", [Str]),
     timer:sleep(200),
     rebar_agent:do(compile),
     erlang:send_after(1000, self(), beam_reload),

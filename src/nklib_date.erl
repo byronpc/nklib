@@ -462,7 +462,6 @@ gmt_to_local_3339(DateGmt, TZ) ->
 
 
 local_to_gmt_calendar(DateLocal, TZ) ->
-    %lager:error("NKLOG DL ~p", [DateLocal]),
     case to_calendar(DateLocal) of
         {ok, Cal} ->
             qdate_srv:set_timezone(TZ),

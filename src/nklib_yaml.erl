@@ -24,6 +24,7 @@
 
 -export([decode/1, test/0]).
 
+-include("nklib.hrl").
 
 %% ===================================================================
 %% Types
@@ -48,7 +49,7 @@ decode(Term) ->
     end,
     case nklib_util:do_try(Fun) of
         {exception, {error, {Error, Trace}}} ->
-           lager:debug("Error decoding YAML: ~p (~p) (~p)", [Error, Term, Trace]),
+           ?D("Error decoding YAML: ~p (~p) (~p)", [Error, Term, Trace]),
             error({yaml_decode_error, Error});
         {exception, {throw,
             {yamerl_exception, [
@@ -56,7 +57,7 @@ decode(Term) ->
                 |_]}}} ->
             error({yaml_decode_error, {list_to_binary(Txt), Line, Col}});
         {exception, {throw, {Error, Trace}}} ->
-            lager:debug("Error decoding YAML: ~p (~p) (~p)", [Error, Term, Trace]),
+            ?D("Error decoding YAML: ~p (~p) (~p)", [Error, Term, Trace]),
             error({yaml_decode_error, Error});
         Other ->
             Other

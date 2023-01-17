@@ -30,6 +30,7 @@
          forms_replace_fun/4, forms_print/1]).
 
 -include_lib("syntax_tools/include/merl.hrl").
+-include("nklib.hrl").
 
 %% ===================================================================
 %% Private
@@ -63,7 +64,7 @@ getter(Fun, Value) ->
            erl_syntax:atom(Fun),
            [erl_syntax:clause([], none, [erl_syntax:abstract(Value)])])
     catch
-        error:Error -> lager:warning("Could not make getter for ~p", [Value]),
+        error:Error -> ?W("Could not make getter for ~p", [Value]),
         error(Error)
     end.
 
@@ -97,7 +98,7 @@ getter_args(Fun, Arity, ArgsValues, Default) ->
                     ]
             end)
     catch
-        error:Error -> lager:warning("Could not make getter for ~p", [ArgsValues]),
+        error:Error -> ?W("Could not make getter for ~p", [ArgsValues]),
             error(Error)
     end.
 

@@ -24,6 +24,7 @@
 
 -export([encode/1, encode_pretty/1, encode_sorted/1, decode/1, json_ish/1]).
 
+-include("nklib.hrl").
 
 %% ===================================================================
 %% Public
@@ -50,10 +51,10 @@ encode(Term) ->
     end,
     case nklib_util:do_try(Fun) of
         {exception, {error, {Error, Trace}}} ->
-            lager:debug("Error encoding JSON: ~p (~p) (~p)", [Error, Term, Trace]),
+            ?D("Error encoding JSON: ~p (~p) (~p)", [Error, Term, Trace]),
             error({json_encode_error, Error});
         {exception, {throw, {Error, Trace}}} ->
-            lager:debug("Error encoding JSON: ~p (~p) (~p)", [Error, Term, Trace]),
+            ?D("Error encoding JSON: ~p (~p) (~p)", [Error, Term, Trace]),
             error({json_encode_error, Error});
         Other ->
             Other
@@ -78,10 +79,10 @@ encode_pretty(Term) ->
     end,
     case nklib_util:do_try(Fun) of
         {exception, {error, {Error, Trace}}} ->
-            lager:debug("Error encoding JSON: ~p (~p) (~p)", [Error, Term, Trace]),
+            ?D("Error encoding JSON: ~p (~p) (~p)", [Error, Term, Trace]),
             error({json_encode_error, Error});
         {exception, {throw, {Error, Trace}}} ->
-            lager:debug("Error encoding JSON: ~p (~p) (~p)", [Error, Term, Trace]),
+            ?D("Error encoding JSON: ~p (~p) (~p)", [Error, Term, Trace]),
             error({json_encode_error, Error});
         Other ->
             Other
@@ -130,10 +131,10 @@ decode(Term) ->
     end,
     case nklib_util:do_try(Fun) of
         {exception, {error, {Error, Trace}}} ->
-            lager:debug("Error decoding JSON: ~p (~p) (~p)", [Error, Term, Trace]),
+            ?D("Error decoding JSON: ~p (~p) (~p)", [Error, Term, Trace]),
             error({json_decode_error, Error});
         {exception, {throw, {Error, Trace}}} ->
-            lager:debug("Error decoding JSON: ~p (~p) (~p)", [Error, Term, Trace]),
+            ?D("Error decoding JSON: ~p (~p) (~p)", [Error, Term, Trace]),
             error({json_decode_error, Error});
         Other ->
             Other

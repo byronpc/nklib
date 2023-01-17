@@ -26,6 +26,8 @@
 
 -export_type([syntax/0]).
 
+-include("nklib.hrl").
+
 
 -type syntax_subopt() ::
     ignore | any | atom | boolean | {enum, [atom()]} | list | pid | proc | module |
@@ -132,10 +134,10 @@ parse_config([], OK, NoOK, Syntax, #{defaults:=Defaults}=Opts) ->
             OK2 = nklib_util:defaults(OK, Defaults2),
             parse_config([], OK2, NoOK, Syntax, maps:remove(defaults, Opts));
         {ok, _, DefNoOK} ->
-            lager:warning("Error parsing in defaults: ~p", [Defaults]),
+            ?W("Error parsing in defaults: ~p", [Defaults]),
             {error, {no_ok, DefNoOK}};
         {error, Error} ->
-            lager:warning("Error parsing in defaults: ~p", [Defaults]),
+            ?W("Error parsing in defaults: ~p", [Defaults]),
             {error, Error}
     end;
 
@@ -147,7 +149,7 @@ parse_config([], OK, NoOK, _Syntax, Opts) ->
         ok ->
             case NoOK /= [] andalso maps:find(warning_unknown, Opts) of
                 {ok, true} ->
-                    lager:warning("Unknown keys in config: ~p", 
+                    ?W("Unknown keys in config: ~p",
                                   [maps:from_list(NoOK)]);
                 _ -> ok
             end,
@@ -200,7 +202,7 @@ find_config(Key, Val, Rest, OK, NoOK, Syntax, Opts) ->
                 {error, Error} ->
                     throw(Error);
                 {'EXIT', Error} ->
-                    lager:warning("Error calling syntax fun: ~p", [Error]),
+                    ?W("Error calling syntax fun: ~p", [Error]),
                     throw({internal_error, ?MODULE, ?LINE})
             end;
         SubSyntax when is_map(SubSyntax) ->

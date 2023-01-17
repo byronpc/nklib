@@ -30,6 +30,7 @@
 -export([start_link/0]).
 -export([init/1, terminate/2, code_change/3, handle_call/3,
     handle_cast/2, handle_info/2]).
+-include("nklib.hrl").
 
 -compile(inline).
 
@@ -160,16 +161,16 @@ handle_call({update_meta, Class, Type, Fun}, _From, State) ->
             ets:insert(?MODULE, {{meta, Class, Type}, Meta2}),
             {reply, ok, State};
         Other ->
-            lager:warning("NkLIB Types: invalid meta respose (~p ~p): ~p", [Class, Type, Other]),
+            ?W("NkLIB Types: invalid meta respose (~p ~p): ~p", [Class, Type, Other]),
             {reply, {error, function_error, State}}
     catch
         error:Error ->
-            lager:warning("NkLIB Types: invalid meta respose (~p ~p): ~p", [Class, Type, Error]),
+            ?W("NkLIB Types: invalid meta respose (~p ~p): ~p", [Class, Type, Error]),
             {reply, {error, function_error, State}}
     end;
 
 handle_call(Msg, _From, State) ->
-    lager:error("Module ~p received unexpected call ~p", [?MODULE, Msg]),
+    ?E("Module ~p received unexpected call ~p", [?MODULE, Msg]),
     {noreply, State}.
 
 
@@ -178,7 +179,7 @@ handle_call(Msg, _From, State) ->
     {noreply, #state{}} | {stop, term(), #state{}}.
 
 handle_cast(Msg, State) ->
-    lager:error("Module ~p received unexpected cast ~p", [?MODULE, Msg]),
+    ?E("Module ~p received unexpected cast ~p", [?MODULE, Msg]),
     {noreply, State}.
 
 
@@ -187,7 +188,7 @@ handle_cast(Msg, State) ->
     {noreply, #state{}} | {stop, term(), #state{}}.
 
 handle_info(Info, State) ->
-    lager:warning("Module ~p received unexpected info: ~p (~p)", [?MODULE, Info, State]),
+    ?W("Module ~p received unexpected info: ~p (~p)", [?MODULE, Info, State]),
     {noreply, State}.
 
 
