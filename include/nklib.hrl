@@ -21,17 +21,18 @@
 %% ===================================================================
 %% Defines
 %% ===================================================================
+-include_lib("kernel/include/logger.hrl").
 
--define(D(T), logger:debug(T)).
--define(D(T,P), logger:debug(T,P)).
--define(I(T), logger:notice(T)).
--define(I(T,P), logger:notice(T,P)).
--define(N(T), logger:notice(T)).
--define(N(T,P), logger:notice(T,P)).
--define(W(T), logger:warning(T)).
--define(W(T,P), logger:warning(T,P)).
--define(E(T), logger:error(T)).
--define(E(T,P), logger:error(T,P)).
+-define(D(T), ?D(T, [])).
+-define(D(T,P), ?LOG_DEBUG(T,P)).
+-define(I(T), ?I(T, [])).
+-define(I(T,P), ?LOG_INFO(T,P)).
+-define(N(T), ?N(T, [])).
+-define(N(T,P), ?LOG_NOTICE(T,P)).
+-define(W(T), ?W(T, [])).
+-define(W(T,P), ?LOG_WARNING(T,P)).
+-define(E(T), ?E(T, [])).
+-define(E(T,P), ?LOG_ERROR(T,P)).
 
 
 
